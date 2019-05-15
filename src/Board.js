@@ -79,12 +79,31 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      // rowIndex = row, check if it has two 1's
+      // return true if more than one "1"
+      var ones = 0;
+      this.rows()[rowIndex].forEach(function(element) {
+        if (element) {
+          ones++;
+        }
+      });
+      if (ones > 1) {
+        return true;
+      }
+      return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      // get row index
+      // pass row index into above function
+      var numRows = this.get('n');
+      for (var i = 0; i < numRows; i++) {
+        if (this.hasRowConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
 
 
