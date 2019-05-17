@@ -17,22 +17,37 @@
 
 window.findNRooksSolution = function(n) {
 
-  var solution = new Board({n: 5});
+  var board = new Board({n: n});
 
-  var recursive = function (row, col) {};
+  // board.togglePiece(0, 0);
+  for (var row = 0; row < n; row++) {
+    for (var col = 0; col < n; col++) {
+      board.togglePiece(row, col);
+      if (board.hasAnyRooksConflicts()) {
+        board.togglePiece(row, col);
+      }
+    }
+  }
+  // var recursive = function (row, col) {};
   // pass row and col index into recursive
   // for each passed in value
 
-  recursive(0, 0);
+  // recursive(0, 0);
+  var solution = board.rows();
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-
-  var solutionCount = undefined; //fixme
-
+// pass in every combo of row, col
+// make coordinate array from solution boards
+  var solutionCount = 1;
+  if (n > 1) {
+    for (var i = 2; i <= n; i++) {
+      solutionCount *= i;
+    }
+  }
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
