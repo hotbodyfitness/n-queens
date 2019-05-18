@@ -54,7 +54,75 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined;
+  var board = new Board({n: n});
+  var numQueens, rowArr, colArr, majArr, minArr;
+
+  // recursive function passing in starting location
+    // if there is a piece at row col M&M that is passed in then skip
+    // dead space will be starting location row col major and minor diagonals
+      //each time we toggle a new piece it add new row col major and minor diagonals
+
+  var findSolution = function(row, col) {
+    var maj = board._getFirstRowColumnIndexForMajorDiagonalOn(row, col);
+    var min = board._getFirstRowColumnIndexForMinorDiagonalOn(row, col);
+    if (!rowArr.includes(row) && !colArr.includes(col) && !majArr.includes(maj) && !minArr.includes(min)) {
+      board.togglePiece(row, col);
+      numQueens++;
+      rowArr.push(row);
+      colArr.push(col);
+      majArr.push(maj);
+      minArr.push(min);
+      findSolution(row + 1, 0)
+    }
+    for (col; col < n; col++) {
+      if (!rowArr.includes(row) && !colArr.includes(col) && !majArr.includes(maj) && !minArr.includes(min)) {
+        findSolution(row, col);
+      }
+    }
+    // if (n === 4) {console.log(board.rows());}
+  };
+
+  //when we call recursive function using a for loop within a for loop to pass in different locations
+    //break out of for loop if we find a board where there are n queens
+
+  // for (let row = 0; row < n; row++) {
+
+    for (let col = 0; col < n; col++) {
+    if (col !== 0) {
+      board.togglePiece(0, col - 1);
+    }
+      numQueens = 0;
+      rowArr = [];
+      colArr = [];
+      majArr = [];
+      minArr = [];
+      findSolution(0, col);
+      if (numQueens === n) {
+        break;
+      }
+    }
+
+
+  // }
+
+  // board._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex);
+  // board._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex);
+  // board.togglePiece(row, col);
+  // board.hasAnyQueensConflicts();
+  // board._isInBounds(row, col);
+  // if (n > 3) {
+  //   for (var row = 0; row < n; row++) {
+  //     for (var col = 0; col < n; col++) {
+  //       board.togglePiece(row, col);
+  //       if (board.hasAnyQueensConflicts()) {
+  //         board.togglePiece(row, col);
+  //       }
+  //     }
+  //   }
+  // } else if (n === 1) {
+  //   board.togglePiece(0,0);
+  // }
+  var solution = board.rows();
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
