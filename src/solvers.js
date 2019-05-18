@@ -56,6 +56,22 @@ window.countNRooksSolutions = function(n) {
 window.findNQueensSolution = function(n) {
   var board = new Board({n: n});
   var numQueens, rowArr, colArr, majArr, minArr;
+  var addPiece = function (x, y, ma, mi) {
+    board.togglePiece(x, y);
+    numQueens++;
+    rowArr.push(x);
+    colArr.push(y);
+    majArr.push(ma);
+    minArr.push(mi);
+  };
+  var removePiece = function(x, y) {
+    board.togglePiece(x, y);
+    numQueens--;
+    rowArr.pop();
+    colArr.pop();
+    majArr.pop();
+    minArr.pop();
+  };
 
   // recursive function passing in starting location
     // if there is a piece at row col M&M that is passed in then skip
@@ -66,62 +82,54 @@ window.findNQueensSolution = function(n) {
     var maj = board._getFirstRowColumnIndexForMajorDiagonalOn(row, col);
     var min = board._getFirstRowColumnIndexForMinorDiagonalOn(row, col);
     if (!rowArr.includes(row) && !colArr.includes(col) && !majArr.includes(maj) && !minArr.includes(min)) {
-      board.togglePiece(row, col);
-      numQueens++;
-      rowArr.push(row);
-      colArr.push(col);
-      majArr.push(maj);
-      minArr.push(min);
-      findSolution(row + 1, 0)
+      if (n === 6 && board.rows()[0][3] === 1) {debugger;}
+      addPiece(row, col, maj, min);
+      findSolution(row + 1, 0);
     }
     for (col; col < n; col++) {
+      maj = board._getFirstRowColumnIndexForMajorDiagonalOn(row, col);
+      min = board._getFirstRowColumnIndexForMinorDiagonalOn(row, col);
       if (!rowArr.includes(row) && !colArr.includes(col) && !majArr.includes(maj) && !minArr.includes(min)) {
         findSolution(row, col);
       }
     }
-    // if (n === 4) {console.log(board.rows());}
   };
 
   //when we call recursive function using a for loop within a for loop to pass in different locations
     //break out of for loop if we find a board where there are n queens
 
-  // for (let row = 0; row < n; row++) {
-
-    for (let col = 0; col < n; col++) {
-    if (col !== 0) {
-      board.togglePiece(0, col - 1);
+  for (let col = 0; col < n; col++) {
+    if (numQueens === n) {
+      break;
     }
-      numQueens = 0;
-      rowArr = [];
-      colArr = [];
-      majArr = [];
-      minArr = [];
-      findSolution(0, col);
-      if (numQueens === n) {
-        break;
+    board = new Board({n: n});
+    numQueens = 0;
+    rowArr = [];
+    colArr = [];
+    majArr = [];
+    minArr = [];
+    findSolution(0, col);
+    if (numQueens !== n) {
+      var zeros = n - 1;
+      for (var z = 0; z < n; z++) {
+        if (!board.rows()[z].includes(1)) {
+          zeros = z;
+        }
+      }
+      for (var num = zeros; num >= 0; num--) {
+        if(!board.rows()[num].includes(1)) {
+          var prevPiece = board.rows()[num - 1].indexOf(1);
+          removePiece(num - 1, prevPiece);
+          findSolution(num - 1, prevPiece + 1);
+          if (numQueens === n) {
+            break;
+          }
+        }
       }
     }
+  }
 
 
-  // }
-
-  // board._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex);
-  // board._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex);
-  // board.togglePiece(row, col);
-  // board.hasAnyQueensConflicts();
-  // board._isInBounds(row, col);
-  // if (n > 3) {
-  //   for (var row = 0; row < n; row++) {
-  //     for (var col = 0; col < n; col++) {
-  //       board.togglePiece(row, col);
-  //       if (board.hasAnyQueensConflicts()) {
-  //         board.togglePiece(row, col);
-  //       }
-  //     }
-  //   }
-  // } else if (n === 1) {
-  //   board.togglePiece(0,0);
-  // }
   var solution = board.rows();
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
