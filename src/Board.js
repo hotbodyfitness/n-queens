@@ -203,57 +203,57 @@
     hasMinorDiagonalConflictAt: function(diagonalIndex) {
       var ones = 0;
       var num = this.get('n') - 1;
-      // var rows = this.rows();
-      // var rowStart = 0;
-      // var colStart = 0;
+      var rows = this.rows();
+      var rowStart = 0;
+      var colStart = 0;
 
-      var rowIndex = 0;
-      var colIndex = 0;
+      // var rowIndex = 0;
+      // var colIndex = 0;
 
-      if (diagonalIndex <= num) {
-        colIndex = diagonalIndex;
-        for (var i = rowIndex; i < num; i++) {
-          if (this.rows()[i][colIndex]) {
-            ones++;
-          }
-          colIndex--;
-        }
-      } else if (diagonalIndex > num) {
-        rowIndex = diagonalIndex - num;
-        colIndex = num;
-        for (var i = rowIndex; i <= num; i++) {
-          // console.log(i + ' ' + colIndex);
-          if (this.rows()[i][colIndex]) {
-            ones++;
-          }
-          colIndex--;
-        }
-      }
-
-      // var testMinorDiagonal = function(rowIndex, colIndex) {
-
-      //   // console.log(rowStart + ' ' + colStart);
-      //   if (rows[rowIndex][colIndex]) {
-      //     ones++;
-      //   }
-      //   rowIndex++;
-      //   colIndex--;
-      //   // console.log(rowIndex + ' ' + colIndex);
-      //   if (rowIndex === colStart && colIndex === rowStart) {
-      //     return;
-      //   }
-      //   testMinorDiagonal(rowIndex, colIndex);
-
-      // };
       // if (diagonalIndex <= num) {
-      //   rowStart = 0;
-      //   colStart = diagonalIndex;
-      //   testMinorDiagonal(rowStart, colStart);
+      //   colIndex = diagonalIndex;
+      //   for (var i = rowIndex; i < num; i++) {
+      //     if (this.rows()[i][colIndex]) {
+      //       ones++;
+      //     }
+      //     colIndex--;
+      //   }
       // } else if (diagonalIndex > num) {
-      //   rowStart = diagonalIndex - num;
-      //   colStart = num;
-      //   testMinorDiagonal(rowStart, colStart);
+      //   rowIndex = diagonalIndex - num;
+      //   colIndex = num;
+      //   for (var i = rowIndex; i <= num; i++) {
+      //     // console.log(i + ' ' + colIndex);
+      //     if (this.rows()[i][colIndex]) {
+      //       ones++;
+      //     }
+      //     colIndex--;
+      //   }
       // }
+
+      var testMinorDiagonal = function(rowIndex, colIndex) {
+
+        // console.log(rowStart + ' ' + colStart);
+        if (rows[rowIndex][colIndex]) {
+          ones++;
+        }
+        if (rowIndex === colStart && colIndex === rowStart) {
+          return;
+        }
+        rowIndex++;
+        colIndex--;
+        // console.log(rowIndex + ' ' + colIndex);
+        testMinorDiagonal(rowIndex, colIndex);
+
+      };
+      if (diagonalIndex <= num) {
+        rowStart = 0;
+        colStart = diagonalIndex;
+        testMinorDiagonal(rowStart, colStart);
+      } else if (diagonalIndex > num) {
+        rowStart = diagonalIndex - num;
+        colStart = num;
+        testMinorDiagonal(rowStart, colStart);
+      }
       if (ones > 1) {
         return true;
       }

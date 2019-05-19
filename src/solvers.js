@@ -17,8 +17,9 @@
 
 window.findNRooksSolution = function(n) {
 
-  var solution = new Board({n: 5});
-
+  var solution = new Board({n: n});
+  //given a starting position, place rook at start
+    //all other spots on board with either the same row or same column are no longer available
   var recursive = function (row, col) {};
   // pass row and col index into recursive
   // for each passed in value
