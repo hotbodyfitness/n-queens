@@ -17,15 +17,8 @@
 
 window.findNRooksSolution = function(n) {
 
-<<<<<<< HEAD
-  var solution = new Board({n: n});
-  //given a starting position, place rook at start
-    //all other spots on board with either the same row or same column are no longer available
-  var recursive = function (row, col) {};
-=======
   var board = new Board({n: n});
 
-  // board.togglePiece(0, 0);
   for (var row = 0; row < n; row++) {
     for (var col = 0; col < n; col++) {
       board.togglePiece(row, col);
@@ -34,12 +27,7 @@ window.findNRooksSolution = function(n) {
       }
     }
   }
-  // var recursive = function (row, col) {};
->>>>>>> 66da61ccd82b2e806c1937185959423a9a5acc05
-  // pass row and col index into recursive
-  // for each passed in value
 
-  // recursive(0, 0);
   var solution = board.rows();
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -198,6 +186,55 @@ window.countNQueensSolutions = function(n) {
     }
   };
 
+  var checkOtherCombinations = function () {
+    var firstRowWithoutPiece = n - 1;
+      for (var z = 0; z < n; z++) {
+        if (!board.rows()[z].includes(1)) {
+          firstRowWithoutPiece = z;
+          break;
+        }
+      }
+      for (var num = firstRowWithoutPiece; num >= 0; num--) {
+        if (!board.rows()[num].includes(1)) {
+          if (num === 0) {
+            break;
+          }
+          var prevPiece = board.rows()[num - 1].indexOf(1);
+          removePiece(num - 1, prevPiece);
+          findSolutions(num - 1, prevPiece + 1);
+        }
+      }
+  }
+
+  //recurive call to go back up the rows in the chess board to find if there were other possible solutions
+    //pass in location of the last piece in the current board with n queens
+      //remove piece from board
+      //check the rest of the row to see if there are other possible pieces on row (main way to start recursing)
+        //if there are other possible pieces add piece and try to build a new solution from there
+          //after new board is built, if there are no more solutions recurse with location of piece that was initially set
+        //else recurse using the location of the piece above
+  var findOtherSolutions = function (row, col) {
+    if (!board._isInBounds(row, col)) {
+      return;
+    }
+    removePiece(row, col);
+    for (var restOfRow = col + 1; restOfRow < n; restOfRow++) {
+      findSolutions(row, restOfRow);
+      if (numQueens === n) {
+        solutionCount++;
+        console.log(board.rows())
+        findOtherSolutions(row - 1, board.rows()[row - 1].indexOf(1))
+      } else {
+        // checkOtherCombinations()
+        // if (numQueens === n) {
+        //   solutionCount++;
+        //   console.log(board.rows());
+        // }
+        findOtherSolutions(row - 1, board.rows()[row - 1].indexOf(1))
+      }
+    }
+  }
+
   //when we call recursive function using a for loop within a for loop to pass in different locations
   //break out of for loop if we find a board where there are n queens
 
@@ -213,29 +250,12 @@ window.countNQueensSolutions = function(n) {
     minArr = [];
     findSolutions(0, col);
     if (numQueens !== n) {
-      var firstRowWithoutPiece = n - 1;
-      for (var z = 0; z < n; z++) {
-        if (!board.rows()[z].includes(1)) {
-          firstRowWithoutPiece = z;
-          break;
-        }
-      }
-      for (var num = firstRowWithoutPiece; num >= 0; num--) {
-        if (!board.rows()[num].includes(1)) {
-          if (num === 0) {
-            break;
-          }
-          var prevPiece = board.rows()[num - 1].indexOf(1);
-          removePiece(num - 1, prevPiece);
-          findSolutions(num - 1, prevPiece + 1);
-          if (numQueens === n) {
-            solutionCount++;
-          }
-        }
-      }
+      checkOtherCombinations()
     }
     if (numQueens === n) {
       solutionCount++;
+      console.log(board.rows())
+      findOtherSolutions(n - 1, colArr[n - 1])
     }
   }
 
