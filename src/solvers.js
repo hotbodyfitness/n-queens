@@ -114,6 +114,7 @@ window.findNQueensSolution = function(n) {
       for (var z = 0; z < n; z++) {
         if (!board.rows()[z].includes(1)) {
           zeros = z;
+          break;
         }
       }
       for (var num = zeros; num >= 0; num--) {
