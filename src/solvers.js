@@ -55,6 +55,7 @@ window.countNRooksSolutions = function(n) {
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
   var board = new Board({n: n});
+
   var numQueens, rowArr, colArr, majArr, minArr;
   var addPiece = function (x, y, ma, mi) {
     board.togglePiece(x, y);
@@ -74,15 +75,17 @@ window.findNQueensSolution = function(n) {
   };
 
   // recursive function passing in starting location
-    // if there is a piece at row col M&M that is passed in then skip
-    // dead space will be starting location row col major and minor diagonals
-      //each time we toggle a new piece it add new row col major and minor diagonals
+  // if there is a piece at row col M&M that is passed in then skip
+  // dead space will be starting location row col major and minor diagonals
+  //each time we toggle a new piece it add new row col major and minor diagonals
 
   var findSolution = function(row, col) {
     var maj = board._getFirstRowColumnIndexForMajorDiagonalOn(row, col);
     var min = board._getFirstRowColumnIndexForMinorDiagonalOn(row, col);
     if (!rowArr.includes(row) && !colArr.includes(col) && !majArr.includes(maj) && !minArr.includes(min)) {
-      if (n === 6 && board.rows()[0][3] === 1) {debugger;}
+      if (!board._isInBounds(row, col)) {
+        return;
+      }
       addPiece(row, col, maj, min);
       findSolution(row + 1, 0);
     }
@@ -96,7 +99,7 @@ window.findNQueensSolution = function(n) {
   };
 
   //when we call recursive function using a for loop within a for loop to pass in different locations
-    //break out of for loop if we find a board where there are n queens
+  //break out of for loop if we find a board where there are n queens
 
   for (let col = 0; col < n; col++) {
     if (numQueens === n) {
@@ -118,7 +121,10 @@ window.findNQueensSolution = function(n) {
         }
       }
       for (var num = zeros; num >= 0; num--) {
-        if(!board.rows()[num].includes(1)) {
+        if (!board.rows()[num].includes(1)) {
+          if (num === 0) {
+            break;
+          }
           var prevPiece = board.rows()[num - 1].indexOf(1);
           removePiece(num - 1, prevPiece);
           findSolution(num - 1, prevPiece + 1);
