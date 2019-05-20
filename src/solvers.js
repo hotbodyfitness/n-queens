@@ -223,12 +223,14 @@ window.countNQueensSolutions = function(n) {
           findSolutions(num - 1, prevPiece + 1);
           if (numQueens === n) {
             solutionCount++;
+            console.log(board.rows())
           }
         }
       }
     }
     if (numQueens === n) {
       solutionCount++;
+      console.log(board.rows())
     }
   }
 
