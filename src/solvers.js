@@ -182,6 +182,7 @@ window.countNQueensSolutions = function(n) {
       min = minCalc(row, col);
       if (!rowArr.includes(row) && !colArr.includes(col) && !majArr.includes(maj) && !minArr.includes(min)) {
         findSolutions(row, col);
+
       }
     }
   };
@@ -202,13 +203,6 @@ window.countNQueensSolutions = function(n) {
           var prevPiece = board.rows()[num - 1].indexOf(1);
           removePiece(num - 1, prevPiece);
           findSolutions(num - 1, prevPiece + 1);
-<<<<<<< HEAD
-          if (numQueens === n) {
-            solutionCount++;
-            console.log(board.rows())
-          }
-=======
->>>>>>> ac0e6051fbddb8b105b29b5281658a80a8812838
         }
       }
   }
@@ -221,17 +215,30 @@ window.countNQueensSolutions = function(n) {
           //after new board is built, if there are no more solutions recurse with location of piece that was initially set
         //else recurse using the location of the piece above
   var findOtherSolutions = function (row, col) {
-    if (!board._isInBounds(row, col)) {
+    if (row === 0 || col < 0) {
       return;
     }
     removePiece(row, col);
-    for (var restOfRow = col + 1; restOfRow < n; restOfRow++) {
-      findSolutions(row, restOfRow);
-      if (numQueens === n) {
-        solutionCount++;
-        console.log(board.rows())
-        findOtherSolutions(row - 1, board.rows()[row - 1].indexOf(1))
-      } else {
+    for (var lowerRows = row + 1; lowerRows < n; lowerRows++) {
+      if (board.rows()[lowerRows].includes(1)) {
+        removePiece(lowerRows, board.rows()[lowerRows].indexOf(1))
+      }
+    }
+    for (col; col < n; col++) {
+      var restOfRow = col + 1
+      var maj = majCalc(row, restOfRow);
+      var min = minCalc(row, restOfRow);
+      if (board._isInBounds(row, restOfRow) && !colArr.includes(restOfRow) && !majArr.includes(maj) && !minArr.includes(min)) {
+        findSolutions(row, restOfRow);
+        if (numQueens !== n) {
+          checkOtherCombinations()
+        }
+        if (numQueens === n) {
+          solutionCount++;
+          console.log(board.rows())
+          // findOtherSolutions(row - 1, board.rows()[row - 1].indexOf(1))
+        }
+      } else if (restOfRow === n && numQueens !== n) {
         // checkOtherCombinations()
         // if (numQueens === n) {
         //   solutionCount++;
@@ -262,10 +269,7 @@ window.countNQueensSolutions = function(n) {
     if (numQueens === n) {
       solutionCount++;
       console.log(board.rows())
-<<<<<<< HEAD
-=======
       findOtherSolutions(n - 1, colArr[n - 1])
->>>>>>> ac0e6051fbddb8b105b29b5281658a80a8812838
     }
   }
 
